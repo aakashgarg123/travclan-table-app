@@ -1,23 +1,25 @@
 import React, {useEffect,useState} from 'react';
 import axios from 'axios';
-import Table from './Table';
+import BidsTable from './Table';
 import { TableDataContext } from '../Contexts/tableDataContext';
-
-
-
 
 const App = () => {
     const [tableData, setTableData] = useState()
 
     useEffect(() => {
-        axios.get('https://intense-tor-76305.herokuapp.com/merchants').then((response) => {
-    // handle success
-        setTableData(response.data);
-  })
+        console.log('XXXXXXXXXXXXx')
+       axios.get('https://intense-tor-76305.herokuapp.com/merchants').then((response) => {
+//    
+     setTableData(response.data);
+   })
     },[])
+
+
+
 return (
     <TableDataContext.Provider value={tableData}>
-        <Table/>
+        <BidsTable/>
+        {/* <EnhancedTable /> */}
     </TableDataContext.Provider>
 )
 }
