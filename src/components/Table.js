@@ -44,7 +44,7 @@ const headCells = [
     { id: 'email', label: 'Email' },
     { id: 'phone', label: 'Phone' },
     { id: 'premium', label: 'Premium', disableSorting: true },
-    { id: 'bid', label: 'Max/Min bid', disableSorting: true },
+    { id: 'bid', label: 'Bid',disableSorting: false},
 ]
 
 
@@ -52,23 +52,25 @@ const headCells = [
 const BidsTable = () => {
     const classes = useStyles();
     const data = useContext(TableDataContext)
-    console.log(data)
+
     const [records, setRecords] = useState()
+
     const [filterFn, setFilterFn] = useState({ fn: items => { return items; } })
+
+    const [isMin, setIsMin] = React.useState(false);
+
     const {
         TblContainer,
         TblHead,
         TblPagination,
         recordsAfterPagingAndSorting
     } = useTable(records, headCells, filterFn);
-    console.log(data)
-    console.log(records)
+    
 
     React.useEffect(() => {
         setRecords(data)
     },[data])
 
-    const { TableContainer } = useTable();
 
     const maxBid = (arr) => {
         let newArr = [];
@@ -84,6 +86,9 @@ const BidsTable = () => {
         }
         return Math.min(...newArr);
     }
+    const handleChange = (event) => {
+        setIsMin(!isMin);
+      };
 
 return (
     <React.Fragment>
@@ -103,14 +108,24 @@ return (
                                     <TableCell>{item.email}</TableCell>
                                     <TableCell>{item.phone}</TableCell>
                                     <TableCell>{item.hasPremium.toString()}</TableCell>
-                                    <TableCell>{item.bids.length > 0 ? maxBid(item.bids): 0}</TableCell>
+                                    <TableCell>{item.bids.length > 0 && !isMin ? maxBid(item.bids): (item.bids.length > 0 && isMin ? minBid(item.bids) : 0)}</TableCell>
                                 </TableRow>)
                             )
                         }
                     </TableBody>
                 </TblContainer>
                 <TblPagination />
+                {/* <Switch
+                    checked={isMin}
+                    onChange={handleChange}
+                    name="checkedA"
+                    inputProps={{ 'aria-label': 'secondary checkbox' }}>SEE MIN BIDS?</Switch> */}
+                    <FormControlLabel control={<Switch checked={isMin}
+                    onChange={handleChange}
+                    name="checkedA"
+                    inputProps={{ 'aria-label': 'secondary checkbox' }} />} label="SEE MIN BIDS?" />
             </Paper>
+           
             )}
     </React.Fragment>
 )
